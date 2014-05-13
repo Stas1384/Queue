@@ -1,0 +1,170 @@
+#include<iostream> 
+using namespace std; 
+
+class queue { 
+private:
+	int *a, r, f, size; 
+	
+	// конструктор класу
+	// задаємо максимальний розмір черги та виділяємо пам'ять під неї
+public:
+	queue() { 
+		f=0; 
+		r=-1; 
+		cout<<"\nEnter size of the Queue\n"; 
+		cin>>size; 
+		a = new int [size]; 
+	}
+
+	// перезавантаження унарних операторів
+	// глобальна функція, яка дружня до класу (тип 1)
+	friend queue& operator+(queue &);
+	// тип 2
+	queue operator-();
+	
+	// перезавантаження бінарних операторів
+	friend queue& operator+(queue &, string);
+	friend queue& operator-(queue &, string);
+	
+
+	int isempty(); 
+	int isfull(); 
+	int push();
+	int push(string);
+	int pop(); 
+	int display(); 
+};
+
+queue q;
+
+// перезавантаження унарних операторів
+// глобальна функція, яка дружня до класу (тип 1)
+queue& operator+(queue &q) {
+	q.push();
+	return q;
+}
+
+// тип 2
+queue queue::operator-()
+{
+	q.pop();
+	return *this;
+}
+
+// перезавантаження бінарних операторів
+// 
+queue& operator+(queue &q, string s)
+{
+	q.push(s);
+	return q;
+
+}
+queue& operator-(queue &q, string s)
+{
+	q.pop();
+	q.push(s);
+	return q;
+}
+
+int queue::isempty() { 
+	if (r == -1) 
+		return 1; 
+	return 0; 
+} 
+
+int queue::isfull() { 
+	if (r == (size - 1)) 
+		return 1; 
+	return 0; 
+}
+
+int queue::push() { 
+	if (isfull()) { 
+		cout << "\n Queue Overflow\n"; 
+		return 0; 
+	} 
+	else { 
+		//cout << "\nEnter an Element\n"; 
+		cin >> a[++r]; 
+		cout << a[r] << " inserted successfully\n"; 
+	} 
+} 
+
+int queue::push(std::string s) {
+	if (isfull()) {
+		cout << "\n Queue Overflow\n";
+		return 0;
+	}
+	else { 
+		a[++r]=atoi(s.c_str());
+		cout << a[r] << " inserted successfully\n";
+	}
+}
+
+int queue::pop() { 
+	if (isempty()) { 
+		cout << "\nQueue Underflow\n"; 
+		return 0; 
+	} 
+	for (int i = 0; i <= r; i++) 
+		a[i] = a[i + 1]; 
+	--r; 
+	cout << "Element deleted successfully\n"; 
+} 
+
+int queue::display() { 
+	if (isempty()) { 
+		cout << "\nQueue is empty -- No element to display\n"; 
+		return 0; 
+	} 
+	else { 
+		for (int i = 0; i <= r; i++) 
+			cout << "" << a[i] << " "; 
+	} 
+}
+
+int main() { 
+	int i = 0;
+	char s;
+	std::string str;
+
+	
+	cout << "Enter option\n";
+	while (i != 1) {  
+		cin >> s;
+
+		switch (s) { 
+		case '+': 
+			q = +q;
+			break; 
+		case '-': 
+			q = -q; 
+			break; 
+		case '=': 
+			q.display(); 
+			break; 
+		case 'q': 
+			i = 1; 
+			break;
+		case '0':			// якщо число, додавати в чергу
+		case '1':
+		case '2':
+		case '3':		
+		case '4':
+		case '5':		
+		case '6':
+		case '7':		
+		case '8':
+		case '9':
+			str = "";
+			str += s;
+			q.push(str);
+			break;
+		default: 
+			cout << "\nEnter correct option\n"; 
+			break; 
+		} 
+	} 
+	
+	return 0; 
+}
