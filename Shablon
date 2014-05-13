@@ -1,0 +1,165 @@
+#include<iostream> 
+using namespace std;
+
+template <class QType> class queue {
+private:
+	int *a, r, f, size;
+
+	// конструктор класу
+	// задаємо максимальний розмір черги та виділяємо пам'ять під неї
+public:
+	queue() {
+		f = 0;
+		r = -1;
+		cout << "\nEnter size of the Queue\n";
+		cin >> size;
+		a = new int[size];
+	}
+
+	int isempty();
+	int isfull();
+	queue<QType> push();
+	queue<QType> push(string);
+	QType pop();
+	int display();
+
+	// тип 2
+	queue<QType> operator-();
+	// перезавантаження унарних операторів
+	// глобальна функція, яка дружня до класу (тип 1)
+	friend queue<QType> operator+(queue<QType> &q)
+	{
+		q.push();
+		return q;
+	}
+	// перезавантаження бінарних операторів
+	friend queue<QType> operator +(queue<QType> &, string);
+	friend queue<QType> operator -(queue<QType> &, string);
+};
+
+queue <int> q;
+
+template <class QType> int queue<QType>::isempty() {
+	if (r == -1)
+		return 1;
+	return 0;
+}
+
+template <class QType> int queue<QType>::isfull() {
+	if (r == (size - 1))
+		return 1;
+	return 0;
+}
+
+template <class QType> queue<QType> queue<QType>::push() {
+	if (isfull()) {
+		cout << "\n Queue Overflow\n";
+		exit(1);
+	}
+	else {
+		//cout << "\nEnter an Element\n"; 
+		cin >> a[++r];
+		cout << a[r] << " inserted successfully\n";
+	}
+}
+
+template <class QType> queue<QType> queue<QType>::push(string s) {
+	if (isfull()) {
+		cout << "\n Queue Overflow\n";
+		exit(1);
+	}
+	else {
+		a[++r] = atoi(s.c_str());
+		cout << a[r] << " inserted successfully\n";
+	}
+}
+
+template <class QType> QType queue<QType>::pop() {
+	if (isempty()) {
+		cout << "\nQueue Underflow\n";
+		exit(1);
+	}
+	for (int i = 0; i <= r; i++)
+		a[i] = a[i + 1];
+	--r;
+	cout << "Element deleted successfully\n";
+}
+
+template <class QType> int queue<QType>::display() {
+	if (isempty()) {
+		cout << "\nQueue is empty -- No element to display\n";
+		return 0;
+	}
+	else {
+		for (int i = 0; i <= r; i++)
+			cout << "" << a[i] << " ";
+	}
+}
+
+// тип 2
+template <class QType> queue<QType> queue<QType>::operator-()
+{
+	q.pop();
+	return *this;
+}
+
+
+// перезавантаження бінарних операторів
+template <class QType> queue<QType> operator-(queue<QType> &q, string s)
+{
+	q.pop();
+	q.push(s);
+	return q;
+}
+
+template <class QType> queue<QType> operator+(queue<QType> &q, string s)
+{
+	q.push(s);
+	return q;
+}
+
+int main() {
+	int i = 0;
+	char s;
+	string str;
+
+	cout << "Enter option\n";
+	while (i != 1) {
+		cin >> s;
+
+		switch (s) {
+		case '-':
+			q = -q;
+			break;
+		case '+':
+			q = +q;
+			break;
+		case '=':
+			q.display();
+			break;
+		case 'q':
+			i = 1;
+			break;
+		case '0':			// якщо число, додавати в чергу
+		case '1':
+		case '2':
+		case '3':
+		case '4':
+		case '5':
+		case '6':
+		case '7':
+		case '8':
+		case '9':
+			str = "";
+			str += s;
+			q.push(str);
+			break;
+		default:
+			cout << "\nEnter correct option\n";
+			break;
+		}
+	}
+
+	cin.get();
+	return 0;
+}
